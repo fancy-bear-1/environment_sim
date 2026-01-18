@@ -1,0 +1,29 @@
+[gd_scene load_steps=3 format=3 uid="uid://crgxagyah6wr0"]
+
+[ext_resource type="Script" uid="uid://cwceisrj7aokt" path="res://sim_src/world.gd" id="1_0f027"]
+[ext_resource type="Script" uid="uid://drwtwdfbdexe0" path="res://sim_src/utils/camera/camera.gd" id="2_2c62f"]
+
+[node name="Node3D" type="Node3D"]
+
+[node name="World" type="Node3D" parent="."]
+script = ExtResource("1_0f027")
+
+[node name="OmniLight3D" type="OmniLight3D" parent="World"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 25, 1.482, 25)
+light_size = 1.0
+omni_range = 4096.0
+omni_attenuation = -0.553
+omni_shadow_mode = 0
+
+[node name="birds-eye cam" type="Camera3D" parent="World"]
+transform = Transform3D(1, 0, 0, 0, 0.21643965, 0.976296, 0, -0.976296, 0.21643965, 0, -0.013, 0)
+fov = 80.0
+near = 10.0
+far = 120.0
+
+[node name="Camera3D" type="Camera3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 0.89960355, 0.43670762, 0, -0.43670762, 0.89960355, 1.5229397, 1.2858258, 3.0228827)
+current = true
+script = ExtResource("2_2c62f")
+
+[node name="UI root" type="Node2D" parent="Camera3D"]

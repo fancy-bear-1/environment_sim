@@ -1,0 +1,62 @@
+add seed and saving
+
+add UI:
+    year, day
+        text on top center of screen
+    selected biome data
+        draw pie chart for CSS
+        show temperature and humidity as text
+        on top right of screen
+        on top left show 2d map
+            very baby easy, just have static top-down camera
+    menu for saving, loading, creating new, exiting
+        separate UI layer that gets enabled or disabled that's on top of everything else 
+
+figure out lighting system
+
+add rivers and other bodies of water
+    rivers from high points to low points
+        also involves the amount of snow/ice buildup
+    lakes/oceans at low points
+        make this the default so that anythying that isn't touched by a mountain is underwater
+            then make the largest continuous body of water ocean, and the rest randomly decided based off of distance to the ocean
+                I.E. 50/50 on the coast, lower and lower until asymptote if further inland/higher
+        also involves biome split between above and below water with beach as a 1-2 chunk buffer
+        
+
+add more complexity to soil system
+    involves layers of strata based on the biome
+    soil depth
+
+add more complexity to weather system
+    create circulation patterns based off of elevation and bodies of water
+    more types of weather than just snow/rain
+        fog
+        dew
+        distinction between snow/ice
+        NATURAL DISASTERS
+
+add PLANTS:
+    organism abstract class
+        growth means how big the thing currently is from 0-100
+            will have a polynomial equation associated with it to determine nutrient requirements/usage at different ages
+                I.E. while growing fast, the nutrients stored in it will grow a lot 
+        nutrients encapsulates how many nutrients the thing has right now in it
+            goes up with growth
+            has a static usage rate based on the nutrient level
+                I.E. .2 * x
+                    don't know if this is accurate, more research needed
+        split into asexual and sexual child classes based on reproduction
+            asexual:
+                if growth > reproduction threshhold and food source > damage threshhold
+                    clone self with noise mapped on self's traits
+    food source class
+        current and max food levels
+        threshhold for taking damage/nutrients from self
+        photosynthesis:
+            does the plant have sun
+                if yes, then take water and nutrients from the soil to generate food
+    genetic trait class
+        TODO
+
+add erosion from wind/water on larger timescales
