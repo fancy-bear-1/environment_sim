@@ -49,7 +49,7 @@ func _init(biome_name, center_coord, biome_dict) -> void:
     selected_flag = false
 
 # Called every frame. 'delta' is the elapsed time since the previous frame.
-func _process(delta: float) -> void:
+func _process(_delta: float) -> void:
     var var_avg_dict = {"nutrient_level": 0.0, "moisture": 0.0, "clay": 0, "sand": 0, "silt": 0}
     var raining_counter = 0
     for chunk in chunklist:
@@ -60,15 +60,15 @@ func _process(delta: float) -> void:
         var_avg_dict["sand"] += chunk.css.sand
         var_avg_dict["silt"] += chunk.css.silt
 
-    nutrient_level = var_avg_dict["nutrient_level"]
-    moisture = var_avg_dict["moisture"]
+    nutrient_level = var_avg_dict["nutrient_level"] / len(chunklist)
+    moisture = var_avg_dict["moisture"] / len(chunklist)
     raining = raining_counter > (len(chunklist) / 2) 
     
     css.clay = int(var_avg_dict["clay"] / len(chunklist))
     css.sand = int(var_avg_dict["sand"] / len(chunklist))
     css.silt = int(var_avg_dict["silt"] / len(chunklist))
 
-func _next_season() -> void:
+func next_season() -> void:
     if len(season_humidity) > 1:
         season_index += 1
         if season_index >= len(season_temperature):
@@ -84,9 +84,6 @@ func on_mouse_entered():
         selected_flag = true
         print("mouse entered biome " + name)
         var world_node = get_node(NodePath('../'))
-        # while world_node.lock:
-            # pass
-        # world_node.lock = true
         world_node.selected_biome = self
         for biome in world_node.generated_biomelist:
             if biome != self:

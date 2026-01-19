@@ -29,22 +29,28 @@ script = ExtResource("2_2c62f")
 [node name="VERSION" type="RichTextLabel" parent="Camera3D/CanvasLayer"]
 offset_right = 538.0
 offset_bottom = 234.0
+theme_override_constants/outline_size = 5
+theme_override_font_sizes/normal_font_size = 24
 text = "ALPHA v.0.0.2
 "
 
 [node name="biome" type="RichTextLabel" parent="Camera3D/CanvasLayer"]
-offset_left = 419.0
-offset_top = 2.0
-offset_right = 885.0
-offset_bottom = 55.0
+offset_left = 940.0
+offset_top = 5.0
+offset_right = 1495.0
+offset_bottom = 77.0
+theme_override_constants/outline_size = 5
+theme_override_font_sizes/normal_font_size = 24
 text = "SELECTED BIOME: 
 "
 
 [node name="biome_data" type="RichTextLabel" parent="Camera3D/CanvasLayer"]
-offset_left = 780.0
-offset_top = 1.0
-offset_right = 1152.0
-offset_bottom = 310.0
+offset_left = 1537.0
+offset_top = 11.0
+offset_right = 1909.0
+offset_bottom = 320.0
+theme_override_constants/outline_size = 5
+theme_override_font_sizes/normal_font_size = 24
 text = "SEASON TEMPERATURE:
 SEASON HUMIDITY:
 NUTRIENT LEVEL: 
@@ -55,18 +61,24 @@ MOISTURE:
 horizontal_alignment = 2
 
 [node name="year_day" type="RichTextLabel" parent="Camera3D/CanvasLayer"]
-offset_left = 134.0
-offset_right = 384.0
-offset_bottom = 23.0
+offset_left = 400.0
+offset_top = 3.0
+offset_right = 650.0
+offset_bottom = 48.0
+theme_override_constants/outline_size = 5
+theme_override_font_sizes/normal_font_size = 24
 text = "YEAR: 0 DAY: 0"
 
 [node name="PieChart" type="Control" parent="Camera3D/CanvasLayer"]
 layout_mode = 3
 anchors_preset = 0
-offset_left = 1028.0
-offset_top = 158.0
-offset_right = 1148.0
-offset_bottom = 273.0
+offset_left = 1445.0
+offset_top = 278.0
+offset_right = 1959.0
+offset_bottom = 604.0
 script = ExtResource("3_gyfs4")
 doughnut_shape = false
+outer_border = true
+lateral_borders = true
+border_color = Color(0, 0, 0, 1)
 metadata/_custom_type_script = "uid://p5nvedq5xx8i"

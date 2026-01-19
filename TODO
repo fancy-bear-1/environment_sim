@@ -1,20 +1,17 @@
-add seed and saving
+add saving
 
 add UI:
-    year, day
-        text on top center of screen
-    selected biome data
-        draw pie chart for CSS
-        show temperature and humidity as text
-        on top right of screen
         on top left show 2d map
-            very baby easy, just have static top-down camera
+        on bottom left put a slider for the timespeed,
     menu for saving, loading, creating new, exiting
         separate UI layer that gets enabled or disabled that's on top of everything else 
 
 figure out lighting system
 
+add graphical indicator of the rain state of each biome
+
 add rivers and other bodies of water
+    these will affect humidity
     rivers from high points to low points
         also involves the amount of snow/ice buildup
     lakes/oceans at low points
@@ -30,7 +27,16 @@ add more complexity to soil system
     soil depth
 
 add more complexity to weather system
-    create circulation patterns based off of elevation and bodies of water
+    create a weather class that includes 
+        precipitation amount
+        sun amount
+        temperature change
+        a Vector3 wind direction
+    create circulation patterns based off of elevation, biomes, and humidity
+        this will be done via a linkedlist of vector3 points
+            these will affect the wind direction of the weather
+        each circulation pattern will be associated with a season and would have a corresponding weather object for every chunk
+            weather objects would then be combined via vector addition to determine the weather of all the chunks
     more types of weather than just snow/rain
         fog
         dew

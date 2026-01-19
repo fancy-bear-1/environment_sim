@@ -7,6 +7,7 @@ static var tolerance := 5.0
 static var elevation_const := -3.0
 static var buffer := 10
 static var elevation_noise_const := 1.0
+static var rain_const := 1.0
 
 var chunk_coord: Vector2
 var temperature: float
@@ -48,7 +49,7 @@ func _draw_chunk():
     area.input_ray_pickable = true
 
     # set the shape size to use for collision box
-    shape.extents = Vector3(1, buffer + elevation, 1)
+    shape.extents = Vector3(_world_scale, buffer + (_world_scale * elevation / 2), _world_scale)
     collision.shape = shape
     area.add_child(collision)
 
@@ -57,17 +58,22 @@ func _draw_chunk():
     cube.mesh = BoxMesh.new()
     cube.position = Vector3(_world_scale * chunk_coord.x, buffer + (_world_scale * elevation / 2), _world_scale * chunk_coord.y)
     area.position = Vector3(_world_scale * chunk_coord.x, buffer + (_world_scale * elevation / 2), _world_scale * chunk_coord.y)
-    # area.scale = Vector3(_world_scale, _world_scale, _world_scale)
+    area.scale = Vector3(_world_scale, _world_scale, _world_scale)
     cube.scale = Vector3(_world_scale, _world_scale, _world_scale)
-    cube.mesh.size = Vector3(1, buffer + elevation, 1)
+    cube.mesh.size = Vector3(_world_scale, buffer + (_world_scale * elevation / 2), _world_scale)
 
-    # then create a surface material and set the color
-    var material = StandardMaterial3D.new()
+    # then create/get a surface material and set the color
+    material = cube.mesh.surface_get_material(0)
+    if material == null:
+        material = StandardMaterial3D.new()
+
     material.albedo_color = Color(_biome.color[0], _biome.color[1], _biome.color[2])
-    set_mouse_filter(1)
+    cube.mesh.surface_set_material(0, material)
+
+    # enable mouse input listening
+    set_mouse_filter(MouseFilter.MOUSE_FILTER_PASS)
     
     # then set graphical box color and set children/add to group
-    cube.mesh.surface_set_material(0, material)
     add_child(area)
     add_child(cube)
     add_to_group(_biome.name)
@@ -100,10 +106,6 @@ func _to_string():
     tmp += '\n\tcss: ' + str(css)
     return tmp
 
-func rain():
-    moisture += 1
-    raining = true
-
 func next_season():
     temperature = _rand_by_tolerance(_biome.temperature) - ((elevation - 1) * elevation_const)
     humidity = _rand_by_tolerance(_biome.humidity) + ((elevation - 1) * elevation_const)
@@ -111,20 +113,24 @@ func next_season():
 func _do_tick():
     # water
     if raining:
-        moisture += water_retention
+        moisture += water_retention * rain_const
 
-        nutrient_level -= (nutrient_level * (randf() * (100 - nutrient_retention)) / 100)
+        nutrient_level -= (nutrient_level * (randf() * (100 - nutrient_retention)) / 1000)
+        if nutrient_level <= 0: nutrient_level = 0
 
     else:
         if randf() * 100 > water_retention:
             # moisture -= moisture * (randf() * 5) / 100
             moisture -= moisture * (randf() * water_retention) / 100
+    
+    if moisture >= 100.0:
+        moisture = 100.0
 
 # Called every frame. 'delta' is the elapsed time since the previous frame.
 func _process(_delta: float) -> void:
-    if randi() * 100 <= humidity:
-        rain()
-    else:
+    if randi() % 100 > humidity:
         raining = false
+    else:
+        raining = true
 
     _do_tick()

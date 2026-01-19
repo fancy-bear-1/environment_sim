@@ -1,9 +1,9 @@
 class_name World
 extends Node3D
-
-const Chunk = preload("res://sim_src/chunk.gd")
-const Biome = preload("res://sim_src/biome.gd")
-const ClaySandSilt = preload("res://sim_src/soil/clay_silt_sand.gd")
+#
+#const Chunk = preload("res://sim_src/chunk.gd")
+#const Biome = preload("res://sim_src/biome.gd")
+#const ClaySandSilt = preload("res://sim_src/soil/clay_silt_sand.gd")
 const BIOME_LIST = preload("res://sim_src/biomes.json").data
 
 static var width := 100
@@ -163,13 +163,15 @@ func _ready() -> void:
     print("job done")
 
 # Called every frame. 'delta' is the elapsed time since the previous frame.
-func _process(delta: float) -> void:
+func _process(_delta: float) -> void:
     day_subcount += 1
     if day_subcount >= steps_per_day:
         day_subcount = 0
         day += 1
     if day % days_in_season == 0 and day_subcount == 0:
         print("next season")
+        for biome in generated_biomelist:
+            biome.next_season()
 
     if day > days_in_season * 4:
         day = 0
@@ -184,17 +186,17 @@ func _process(delta: float) -> void:
     if day_subcount == 0:
         ui.find_child("year_day").text = "YEAR: " + str(year) + " DAY: " + str(day)
 
+    var tmp = ''
     var tmp_biome = ui.find_child("biome")
     if tmp_biome.text != "SELECTED BIOME: " + selected_biome.name:
-        var tmp = ''
         match int(day / 90): 
             0: tmp = "SUMMER" 
             1: tmp = "FALL"
             2: tmp = "WINTER"
             3: tmp = "SPRING"
-        tmp_biome.text = "SELECTED BIOME: " + selected_biome.name + "\n" + "SEASON: " + tmp
+        tmp_biome.text = "SELECTED BIOME: " + selected_biome.name + "\n\t\t\t\t" + "SEASON: " + tmp
 
-    var tmp = "SEASON TEMPERATURE: " + str(snapped(selected_biome.temperature, 0.01)) + "\n"
+    tmp = "SEASON TEMPERATURE: " + str(snapped(selected_biome.temperature, 0.01)) + "\n"
     tmp += "SEASON HUMIDITY: " + str(snapped(selected_biome.humidity, 0.01)) + "\n"
     tmp += "NUTRIENT LEVEL: " + str(snapped(selected_biome.nutrient_level, 0.01)) + "\n"
     tmp += "NUTRIENT RETENTION: " + str(snapped(selected_biome.nutrient_retention, 0.01)) + "\n"
