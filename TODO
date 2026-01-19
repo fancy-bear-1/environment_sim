@@ -22,7 +22,8 @@ add rivers and other bodies of water
             then make the largest continuous body of water ocean, and the rest randomly decided based off of distance to the ocean
                 I.E. 50/50 on the coast, lower and lower until asymptote if further inland/higher
         also involves biome split between above and below water with beach as a 1-2 chunk buffer
-        
+        this will be when i flush out wetlands more
+
 
 add more complexity to soil system
     involves layers of strata based on the biome

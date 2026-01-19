@@ -1,9 +1,12 @@
 class_name Chunk
 extends Control
 
-const ClaySandSilt = preload("res://sim_src/soil/clay_silt_sand.gd")
+# const ClaySandSilt = preload("res://sim_src/soil/clay_silt_sand.gd")
 
-static var tolerance := 1.0
+static var tolerance := 5.0
+static var elevation_const := -3.0
+static var buffer := 10
+static var elevation_noise_const := 1.0
 
 var chunk_coord: Vector2
 var temperature: float
@@ -14,13 +17,28 @@ var water_retention: float
 var moisture: float
 var css: ClaySandSilt
 var raining: bool
-var elevation: Dictionary
+var elevation: float
+var _biome: Biome
+var _world_scale: float
 
-# Called when the node enters the scene tree for the first time.
-func _init(coord, biome, world_scale, elevation) -> void:
-    chunk_coord = coord
-    elevation["level"] = elevation + ((randf() * tolerance) - (tolerance / 2))
+func _rand_by_tolerance(num:float) -> float:
+    return (num + ((randf() * tolerance) - (tolerance / 2)))
+
+func _refresh_biome_vars():
+    # set all the elevation dependent variables
+    temperature = _rand_by_tolerance(_biome.temperature) - ((elevation - 1) * elevation_const)
+    humidity = _rand_by_tolerance(_biome.humidity) + ((elevation - 1) * elevation_const)
+    nutrient_retention = _rand_by_tolerance(_biome.nutrient_retention)  - ((elevation - 1) * elevation_const)
+    water_retention = _rand_by_tolerance(_biome.water_retention)  - ((elevation - 1) * elevation_const)
     
+    # set the rest of the variables
+    nutrient_level = _rand_by_tolerance(_biome.nutrient_level)
+    moisture = _rand_by_tolerance(_biome.moisture)
+    css = ClaySandSilt.new(_biome.css, true)
+
+func _draw_chunk():
+    # reponsible for drawing the chunk graphically and connecting the signal to the parent biome 
+
     # init variables
     var cube:MeshInstance3D = MeshInstance3D.new()
     var collision:CollisionShape3D = CollisionShape3D.new()
@@ -30,41 +48,45 @@ func _init(coord, biome, world_scale, elevation) -> void:
     area.input_ray_pickable = true
 
     # set the shape size to use for collision box
-    shape.extents = Vector3(1, elevation, 1)
+    shape.extents = Vector3(1, buffer + elevation, 1)
     collision.shape = shape
     area.add_child(collision)
 
-    # then create box graphically
+    # then create box graphically using the world scale and elevation
+    # divided by 2 because this will create a flat bottom for the world
     cube.mesh = BoxMesh.new()
-    cube.position = Vector3(world_scale * coord.x, (world_scale * elevation / 2), world_scale * coord.y)
-    area.position = Vector3(world_scale * coord.x, (world_scale * elevation / 2), world_scale * coord.y)
-    cube.scale = Vector3(world_scale, world_scale, world_scale)
-    cube.mesh.size = Vector3(1, elevation, 1)
+    cube.position = Vector3(_world_scale * chunk_coord.x, buffer + (_world_scale * elevation / 2), _world_scale * chunk_coord.y)
+    area.position = Vector3(_world_scale * chunk_coord.x, buffer + (_world_scale * elevation / 2), _world_scale * chunk_coord.y)
+    cube.scale = Vector3(_world_scale, _world_scale, _world_scale)
+    cube.mesh.size = Vector3(1, buffer + elevation, 1)
 
+    # then create a surface material and set the color
     var material = StandardMaterial3D.new()
-    material.albedo_color = Color(biome.color[0], biome.color[1], biome.color[2])
+    material.albedo_color = Color(_biome.color[0], _biome.color[1], _biome.color[2])
     set_mouse_filter(1)
-
-    name = biome.name + ":" + str(coord.x) + ","  + str(coord.y)
     
     # then set graphical box color and set children/add to group
     cube.mesh.surface_set_material(0, material)
     add_child(area)
     add_child(cube)
-    add_to_group(biome.name)
+    add_to_group(_biome.name)
 
     # connect mouse_entered event to the biome's on_mouse_entered
-    area.mouse_entered.connect(biome.on_mouse_entered)
+    area.mouse_entered.connect(_biome.on_mouse_entered)
 
-    temperature = biome.temperature + ((randf() * tolerance) - (tolerance / 2))
-    humidity = biome.humidity + ((randf() * tolerance) - (tolerance / 2))
-    nutrient_level = biome.nutrient_level + ((randf() * tolerance) - (tolerance / 2))
-    nutrient_retention = biome.nutrient_retention + \
-    ((randf() * tolerance) - (tolerance / 2))
-    water_retention = biome.water_retention + ((randf() * tolerance) - (tolerance / 2))
-    moisture = biome.moisture + ((randf() * tolerance) - (tolerance / 2))
-    css = ClaySandSilt.new(biome.css, true)
+# Called when the node enters the scene tree for the first time.
+func _init(coord, biome, world_scale, _elevation) -> void:
 
+    # init basic vars
+    chunk_coord = coord
+    name = biome.name + ":" + str(chunk_coord.x) + ","  + str(chunk_coord.y)
+    elevation = _elevation + ((randf() * elevation_noise_const) - (elevation_noise_const / 2))
+    _biome = biome
+    _world_scale = world_scale
+
+    _refresh_biome_vars()
+    
+    _draw_chunk()
 
 func _to_string():
     var tmp = name
@@ -81,6 +103,22 @@ func rain():
     moisture += 1
     raining = true
 
+func next_season():
+    temperature = _rand_by_tolerance(_biome.temperature) - ((elevation - 1) * elevation_const)
+    humidity = _rand_by_tolerance(_biome.humidity) + ((elevation - 1) * elevation_const)
+
+func _do_tick():
+    # water
+    if raining:
+        moisture += water_retention
+
+        nutrient_level -= (nutrient_level * (randf() * (100 - nutrient_retention)) / 100)
+
+    else:
+        if randf() * 100 > water_retention:
+            # moisture -= moisture * (randf() * 5) / 100
+            moisture -= moisture * (randf() * water_retention) / 100
+
 # Called every frame. 'delta' is the elapsed time since the previous frame.
 func _process(_delta: float) -> void:
     if randi() * 100 <= humidity:
@@ -88,4 +126,4 @@ func _process(_delta: float) -> void:
     else:
         raining = false
 
-    #NodePath
+    _do_tick()

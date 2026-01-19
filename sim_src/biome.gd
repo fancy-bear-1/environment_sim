@@ -19,6 +19,10 @@ var css: ClaySandSilt
 var color: Array
 var selected_flag: bool
 var chunklist: Array[Chunk]
+var raining: bool
+
+func _rand_by_tolerance(num:float) -> float:
+    return (num + ((randf() * tolerance) - (tolerance / 2)))
 
 # Called when the node enters the scene tree for the first time.
 func _init(biome_name, center_coord, biome_dict) -> void:
@@ -44,7 +48,23 @@ func _init(biome_name, center_coord, biome_dict) -> void:
 
 # Called every frame. 'delta' is the elapsed time since the previous frame.
 func _process(delta: float) -> void:
-    pass
+    var var_avg_dict = {"nutrient_level": 0.0, "moisture": 0.0, "clay": 0, "sand": 0, "silt": 0}
+    var raining_counter = 0
+    for chunk in chunklist:
+        var_avg_dict["nutrient_level"] += chunk.nutrient_level
+        var_avg_dict["moisture"] += chunk.moisture
+        if chunk.raining: raining_counter += 1
+        var_avg_dict["clay"] += chunk.css.clay
+        var_avg_dict["sand"] += chunk.css.sand
+        var_avg_dict["silt"] += chunk.css.silt
+
+    nutrient_level = var_avg_dict["nutrient_level"]
+    moisture = var_avg_dict["moisture"]
+    raining = raining_counter > (len(chunklist) / 2) 
+    
+    css.clay = int(var_avg_dict["clay"] / len(chunklist))
+    css.sand = int(var_avg_dict["sand"] / len(chunklist))
+    css.silt = int(var_avg_dict["silt"] / len(chunklist))
 
 func _next_season() -> void:
     pass

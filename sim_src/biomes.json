@@ -1,102 +1,252 @@
 {
-    "rainforest": {
-        "temperature": 80.0,
-        "humidity": 85.0,
-        "nutrient_level": 35.0,
-        "nutrient_retention": 15.0,
-        "water_retention": 45.0,
-        "moisture": 80.0,
-        "css": [60, 25, 15],
-        "color": [1, 0, 0]
-    },
-    "temperate_forest": {
-        "temperature": 55.0,
-        "humidity": 65.0,
-        "nutrient_level": 60.0,
-        "nutrient_retention": 50.0,
-        "water_retention": 55.0,
-        "moisture": 65.0,
-        "css": [30, 45, 25],
-        "color": [0.2, 0.6, 0.2]
-    },
-    "boreal_forest": {
-        "temperature": 30.0,
-        "humidity": 60.0,
-        "nutrient_level": 25.0,
-        "nutrient_retention": 30.0,
-        "water_retention": 45.0,
-        "moisture": 60.0,
-        "css": [25, 35, 40],
-        "color": [0.1, 0.4, 0.2]
-    },
-    "grassland": {
-        "temperature": 60.0,
-        "humidity": 50.0,
-        "nutrient_level": 70.0,
-        "nutrient_retention": 60.0,
-        "water_retention": 55.0,
-        "moisture": 50.0,
-        "css": [20, 50, 30],
-        "color": [0.6, 0.8, 0.2]
-    },
-    "hot_desert": {
-        "temperature": 90.0,
-        "humidity": 20.0,
-        "nutrient_level": 15.0,
-        "nutrient_retention": 8.0,
-        "water_retention": 10.0,
-        "moisture": 10.0,
-        "css": [10, 15, 75],
-        "color": [0.9, 0.8, 0.5]
-    },
-    "savanna": {
-        "temperature": 75.0,
-        "humidity": 55.0,
-        "nutrient_level": 30.0,
-        "nutrient_retention": 25.0,
-        "water_retention": 35.0,
-        "moisture": 45.0,
-        "css": [35, 30, 35],
-        "color": [0.8, 0.7, 0.3]
-    },
-    "chaparral": {
-        "temperature": 65.0,
-        "humidity": 45.0,
-        "nutrient_level": 30.0,
-        "nutrient_retention": 20.0,
-        "water_retention": 30.0,
-        "moisture": 35.0,
-        "css": [25, 25, 50],
-        "color": [0.5, 0.6, 0.3]
-    },
-    "wetlands": {
-        "temperature": 60.0,
-        "humidity": 90.0,
-        "nutrient_level": 40.0,
-        "nutrient_retention": 45.0,
-        "water_retention": 85.0,
-        "moisture": 90.0,
-        "css": [45, 40, 15],
-        "color": [0.1, 0.5, 0.4]
-    },
-    "tundra": {
-        "temperature": 20.0,
-        "humidity": 70.0,
-        "nutrient_level": 15.0,
-        "nutrient_retention": 20.0,
-        "water_retention": 40.0,
-        "moisture": 55.0,
-        "css": [20, 40, 40],
-        "color": [0.7, 0.7, 0.6]
-    },
-    "subtropical_rainforest": {
-        "temperature": 70.0,
-        "humidity": 75.0,
-        "nutrient_level": 40.0,
-        "nutrient_retention": 30.0,
-        "water_retention": 50.0,
-        "moisture": 70.0,
-        "css": [45, 35, 20],
-        "color": [0.0, 0.5, 0.3]
-    }
+	"rainforest": {
+		"temperature": [
+			80.0
+		],
+		"humidity": [
+			85.0
+		],
+		"nutrient_level": 35.0,
+		"nutrient_retention": 15.0,
+		"water_retention": 45.0,
+		"moisture": 80.0,
+		"css": [
+			60.0,
+			25.0,
+			15.0
+		],
+		"color": [
+			1.0,
+			0.0,
+			0.0
+		],
+		"weathering_level": 90.0
+	},
+	"temperate_forest": {
+		"temperature": [
+			70.0,
+			55.0,
+			25.0,
+			55.0
+		],
+		"humidity": [
+			65.0,
+			65.0,
+			65.0,
+			65.0
+		],
+		"nutrient_level": 60.0,
+		"nutrient_retention": 50.0,
+		"water_retention": 55.0,
+		"moisture": 65.0,
+		"css": [
+			30.0,
+			45.0,
+			25.0
+		],
+		"color": [
+			0.200000000000000011,
+			0.599999999999999978,
+			0.200000000000000011
+		],
+		"weathering_level": 60.0
+	},
+	"boreal_forest": {
+		"temperature": [
+			60.0,
+			32.0,
+			20.0,
+			55.0
+		],
+		"humidity": [
+			60.0,
+			60.0,
+			60.0,
+			60.0
+		],
+		"nutrient_level": 25.0,
+		"nutrient_retention": 30.0,
+		"water_retention": 45.0,
+		"moisture": 60.0,
+		"css": [
+			25.0,
+			35.0,
+			40.0
+		],
+		"color": [
+			0.100000000000000006,
+			0.400000000000000022,
+			0.200000000000000011
+		],
+		"weathering_level": 35.0
+	},
+	"grassland": {
+		"temperature": [
+			60.0
+		],
+		"humidity": [
+			50.0
+		],
+		"nutrient_level": 70.0,
+		"nutrient_retention": 60.0,
+		"water_retention": 55.0,
+		"moisture": 50.0,
+		"css": [
+			20.0,
+			50.0,
+			30.0
+		],
+		"color": [
+			0.599999999999999978,
+			0.800000000000000044,
+			0.200000000000000011
+		],
+		"weathering_level": 45.0
+	},
+	"hot_desert": {
+		"temperature": [
+			90.0
+		],
+		"humidity": [
+			20.0
+		],
+		"nutrient_level": 15.0,
+		"nutrient_retention": 8.0,
+		"water_retention": 10.0,
+		"moisture": 10.0,
+		"css": [
+			10.0,
+			15.0,
+			75.0
+		],
+		"color": [
+			0.900000000000000022,
+			0.800000000000000044,
+			0.5
+		],
+		"weathering_level": 15.0
+	},
+	"savanna": {
+		"temperature": [
+			75.0
+		],
+		"humidity": [
+			55.0
+		],
+		"nutrient_level": 30.0,
+		"nutrient_retention": 25.0,
+		"water_retention": 35.0,
+		"moisture": 45.0,
+		"css": [
+			35.0,
+			30.0,
+			35.0
+		],
+		"color": [
+			0.800000000000000044,
+			0.699999999999999956,
+			0.299999999999999989
+		],
+		"weathering_level": 25.0
+	},
+	"chaparral": {
+		"temperature": [
+			85.0,
+			70.0,
+			55.0,
+			60.0
+		],
+		"humidity": [
+			15.0,
+			30.0,
+			55.0,
+			30.0
+		],
+		"nutrient_level": 30.0,
+		"nutrient_retention": 20.0,
+		"water_retention": 30.0,
+		"moisture": 35.0,
+		"css": [
+			25.0,
+			25.0,
+			50.0
+		],
+		"color": [
+			0.5,
+			0.599999999999999978,
+			0.299999999999999989
+		],
+		"weathering_level": 30.0
+	},
+	"wetlands": {
+		"temperature": [
+			60.0
+		],
+		"humidity": [
+			90.0
+		],
+		"nutrient_level": 40.0,
+		"nutrient_retention": 45.0,
+		"water_retention": 85.0,
+		"moisture": 90.0,
+		"css": [
+			45.0,
+			40.0,
+			15.0
+		],
+		"color": [
+			0.100000000000000006,
+			0.5,
+			0.400000000000000022
+		],
+		"weathering_level": 90.0
+	},
+	"tundra": {
+		"temperature": [
+			20.0
+		],
+		"humidity": [
+			70.0
+		],
+		"nutrient_level": 15.0,
+		"nutrient_retention": 20.0,
+		"water_retention": 40.0,
+		"moisture": 55.0,
+		"css": [
+			20.0,
+			40.0,
+			40.0
+		],
+		"color": [
+			0.699999999999999956,
+			0.699999999999999956,
+			0.599999999999999978
+		],
+		"weathering_level": 5.0
+	},
+	"subtropical_rainforest": {
+		"temperature": [
+			70.0,
+			85.0
+		],
+		"humidity": [
+			75.0,
+			35.0
+		],
+		"nutrient_level": 40.0,
+		"nutrient_retention": 30.0,
+		"water_retention": 50.0,
+		"moisture": 70.0,
+		"css": [
+			45.0,
+			35.0,
+			20.0
+		],
+		"color": [
+			0.0,
+			0.5,
+			0.299999999999999989
+		],
+		"weathering_level": 70.0
+	}
 }

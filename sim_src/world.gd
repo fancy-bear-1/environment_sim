@@ -10,6 +10,7 @@ static var width := 100
 static var height := 100
 static var num_biomes := 20
 static var max_mountains := 100
+static var min_mountains := 10
 static var max_mountain_elevation := 20.0
 static var max_mountain_radius := 20
 static var max_mountain_peak_radius := 5
@@ -29,6 +30,7 @@ var years_to_next_css_change: int = 400
 var years_to_next_css_tolerance: int = 1000
 var mountains:Array[Vector2]
 var selected_biome:Biome
+var sun:DirectionalLight3D
 
 var world_seed: int
 
@@ -42,7 +44,7 @@ func generate_mountains():
             tmp.append(1.0)
         elevation_map.append(tmp)
 
-    for i in range(randi() % max_mountains):
+    for i in range((randi() % (max_mountains - min_mountains)) + min_mountains):
         print("mountain " + str(i + 1))
         var elevation: float = randf() * max_mountain_elevation
         print("elevation " + str(elevation))
@@ -127,14 +129,19 @@ func _ready() -> void:
         new_biome.add_to_group("biomes")
         add_child(new_biome)
 
+    selected_biome = generated_biomelist[0]
+
     print("job done")
 
-    print("generating elevation map")
+    print("generating mountains")
     var elevation_map = generate_mountains()
+    # print("generating bodies of water")
     print("job done")
 
     var birdseye_cam = get_node(NodePath('birds-eye cam'))
     birdseye_cam.position = Vector3(width * .5, max_mountain_elevation * 3, height * .75)
+    sun = DirectionalLight3D.new()
+    sun.position = Vector3(width * .5, 10 + max_mountain_elevation * 3, height * .5)
 
     print("generating chunks")
     for y in range(height):
@@ -149,6 +156,7 @@ func _ready() -> void:
                     temp_biome = biome
 
             chunk_row.append(Chunk.new(current_point, temp_biome, world_scale, elevation_map[x][y]))
+            temp_biome.chunklist.append(chunk_row[-1])
             add_child(chunk_row[-1])
             
         chunklist.append(chunk_row)
@@ -171,3 +179,33 @@ func _process(delta: float) -> void:
 
     if years_to_next_css_change <= 0:
         years_to_next_css_change = (randi() * years_to_next_css_tolerance) + (years_to_next_css_tolerance / 2)
+
+    var ui = get_node(NodePath("../Camera3D/CanvasLayer"))
+    if day_subcount == 0:
+        ui.find_child("year_day").text = "YEAR: " + str(year) + " DAY: " + str(day)
+
+    var tmp_biome = ui.find_child("biome")
+    if tmp_biome.text != "SELECTED BIOME: " + selected_biome.name:
+        var tmp = ''
+        match int(day / 90): 
+            0: tmp = "SUMMER" 
+            1: tmp = "FALL"
+            2: tmp = "WINTER"
+            3: tmp = "SPRING"
+        tmp_biome.text = "SELECTED BIOME: " + selected_biome.name + "\n" + "SEASON: " + tmp
+        
+        tmp = "SEASON TEMPERATURE: " + str(snapped(selected_biome.temperature, 0.01)) + "\n"
+        tmp += "SEASON HUMIDITY: " + str(snapped(selected_biome.humidity, 0.01)) + "\n"
+        tmp += "NUTRIENT LEVEL: " + str(snapped(selected_biome.humidity, 0.01)) + "\n"
+        tmp += "NUTRIENT RETENTION: " + str(snapped(selected_biome.humidity, 0.01)) + "\n"
+        tmp += "WATER RETENTION: " + str(snapped(selected_biome.humidity, 0.01)) + "\n"
+        tmp += "MOISTURE: " + str(snapped(selected_biome.humidity, 0.01)) + "\n"
+
+        ui.find_child("biome_data").text = tmp
+
+        var pie_chart = ui.find_child("PieChart")
+        var graph_elements: Dictionary[String, float] = {}
+        graph_elements["clay"] = float(selected_biome.css.clay)
+        graph_elements["sand"] = float(selected_biome.css.sand)
+        graph_elements["silt"] = float(selected_biome.css.silt)
+        pie_chart.set_new_data(graph_elements)
