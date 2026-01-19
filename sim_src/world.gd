@@ -193,19 +193,21 @@ func _process(delta: float) -> void:
             2: tmp = "WINTER"
             3: tmp = "SPRING"
         tmp_biome.text = "SELECTED BIOME: " + selected_biome.name + "\n" + "SEASON: " + tmp
-        
-        tmp = "SEASON TEMPERATURE: " + str(snapped(selected_biome.temperature, 0.01)) + "\n"
-        tmp += "SEASON HUMIDITY: " + str(snapped(selected_biome.humidity, 0.01)) + "\n"
-        tmp += "NUTRIENT LEVEL: " + str(snapped(selected_biome.humidity, 0.01)) + "\n"
-        tmp += "NUTRIENT RETENTION: " + str(snapped(selected_biome.humidity, 0.01)) + "\n"
-        tmp += "WATER RETENTION: " + str(snapped(selected_biome.humidity, 0.01)) + "\n"
-        tmp += "MOISTURE: " + str(snapped(selected_biome.humidity, 0.01)) + "\n"
 
+    var tmp = "SEASON TEMPERATURE: " + str(snapped(selected_biome.temperature, 0.01)) + "\n"
+    tmp += "SEASON HUMIDITY: " + str(snapped(selected_biome.humidity, 0.01)) + "\n"
+    tmp += "NUTRIENT LEVEL: " + str(snapped(selected_biome.nutrient_level, 0.01)) + "\n"
+    tmp += "NUTRIENT RETENTION: " + str(snapped(selected_biome.nutrient_retention, 0.01)) + "\n"
+    tmp += "WATER RETENTION: " + str(snapped(selected_biome.water_retention, 0.01)) + "\n"
+    tmp += "MOISTURE: " + str(snapped(selected_biome.moisture, 0.01)) + "\n"
+    tmp += "RAINING: " + str(selected_biome.raining)
+    if ui.find_child("biome_data").text != tmp:
         ui.find_child("biome_data").text = tmp
 
-        var pie_chart = ui.find_child("PieChart")
-        var graph_elements: Dictionary[String, float] = {}
-        graph_elements["clay"] = float(selected_biome.css.clay)
-        graph_elements["sand"] = float(selected_biome.css.sand)
-        graph_elements["silt"] = float(selected_biome.css.silt)
+    var pie_chart = ui.find_child("PieChart")
+    var graph_elements: Dictionary[String, float] = {}
+    graph_elements["clay"] = float(selected_biome.css.clay)
+    graph_elements["sand"] = float(selected_biome.css.sand)
+    graph_elements["silt"] = float(selected_biome.css.silt)
+    if graph_elements != pie_chart.elements:
         pie_chart.set_new_data(graph_elements)

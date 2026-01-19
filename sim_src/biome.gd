@@ -20,6 +20,7 @@ var color: Array
 var selected_flag: bool
 var chunklist: Array[Chunk]
 var raining: bool
+var season_index: int
 
 func _rand_by_tolerance(num:float) -> float:
     return (num + ((randf() * tolerance) - (tolerance / 2)))
@@ -28,14 +29,15 @@ func _rand_by_tolerance(num:float) -> float:
 func _init(biome_name, center_coord, biome_dict) -> void:
     center = center_coord
     name = biome_name
+    season_index = 0
 
     season_temperature =[] 
     for current_season_temp in biome_dict["temperature"]:
         season_temperature.append(current_season_temp + ((randf() * tolerance) - (tolerance / 2)))
     for current_season_hum in biome_dict["humidity"]:
         season_humidity.append(current_season_hum + ((randf() * tolerance) - (tolerance / 2)))
-    temperature = season_temperature[0] + ((randf() * tolerance) - (tolerance / 2))
-    humidity = season_humidity[0] + ((randf() * tolerance) - (tolerance / 2))
+    temperature = season_temperature[season_index] + ((randf() * tolerance) - (tolerance / 2))
+    humidity = season_humidity[season_index] + ((randf() * tolerance) - (tolerance / 2))
     nutrient_level = biome_dict["nutrient_level"] + ((randf() * tolerance) - (tolerance / 2))
     nutrient_retention = biome_dict["nutrient_retention"] + \
     ((randf() * tolerance) - (tolerance / 2))
@@ -67,7 +69,15 @@ func _process(delta: float) -> void:
     css.silt = int(var_avg_dict["silt"] / len(chunklist))
 
 func _next_season() -> void:
-    pass
+    if len(season_humidity) > 1:
+        season_index += 1
+        if season_index >= len(season_temperature):
+            season_index = 0
+        
+        temperature = season_temperature[season_index]
+        humidity = season_humidity[season_index]
+        for chunk in chunklist:
+            chunk.next_season()
 
 func on_mouse_entered():
     if not selected_flag:

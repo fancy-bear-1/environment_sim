@@ -57,6 +57,7 @@ func _draw_chunk():
     cube.mesh = BoxMesh.new()
     cube.position = Vector3(_world_scale * chunk_coord.x, buffer + (_world_scale * elevation / 2), _world_scale * chunk_coord.y)
     area.position = Vector3(_world_scale * chunk_coord.x, buffer + (_world_scale * elevation / 2), _world_scale * chunk_coord.y)
+    # area.scale = Vector3(_world_scale, _world_scale, _world_scale)
     cube.scale = Vector3(_world_scale, _world_scale, _world_scale)
     cube.mesh.size = Vector3(1, buffer + elevation, 1)
 
