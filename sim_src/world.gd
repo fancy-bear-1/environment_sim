@@ -11,7 +11,7 @@ static var height := 100
 static var num_biomes := 20
 static var max_mountains := 100
 static var min_mountains := 10
-static var max_mountain_elevation := 20.0
+static var max_mountain_elevation := 100.0
 static var max_mountain_radius := 20
 static var max_mountain_peak_radius := 5
 
@@ -33,6 +33,7 @@ var selected_biome:Biome
 var sun:DirectionalLight3D
 
 var world_seed: int
+@onready var world:World=$World
 
 func generate_mountains():
     var elevation_map:Array[Array] = []
@@ -89,7 +90,8 @@ func _phys_erosion():
     pass
 
 func _chem_erosion():
-    # based off of 
+    # based off of moisture
+
     pass
 
 func _do_erosion():
@@ -107,6 +109,9 @@ func _ready() -> void:
         world_seed = randi()
         seed(world_seed)  # Apply it globally
         print("Seed: ", world_seed)
+
+    var ui = get_node(NodePath("../Camera3D/CanvasLayer"))
+    ui.find_child("VERSION").text += "\nSEED: " + str(world_seed)
 
     var biome_count:Dictionary = {}
     for biome in BIOME_LIST.keys():
@@ -138,8 +143,8 @@ func _ready() -> void:
     # print("generating bodies of water")
     print("job done")
 
-    var birdseye_cam = get_node(NodePath('birds-eye cam'))
-    birdseye_cam.position = Vector3(width * .5, max_mountain_elevation * 3, height * .75)
+    var birdseye_cam = get_node(NodePath('../Camera3D/CanvasLayer/2d_map/birds-eye cam'))
+    birdseye_cam.set_position(Vector3(width * .5, max_mountain_elevation * 10, height * .5))
     sun = DirectionalLight3D.new()
     sun.position = Vector3(width * .5, 10 + max_mountain_elevation * 3, height * .5)
 
@@ -169,7 +174,7 @@ func _process(_delta: float) -> void:
         day_subcount = 0
         day += 1
     if day % days_in_season == 0 and day_subcount == 0:
-        print("next season")
+        # print("next season")
         for biome in generated_biomelist:
             biome.next_season()
 
@@ -177,7 +182,7 @@ func _process(_delta: float) -> void:
         day = 0
         year += 1
         years_to_next_css_change -= 1
-        print("YEAR: " + str(year))
+        # print("YEAR: " + str(year))
 
     if years_to_next_css_change <= 0:
         years_to_next_css_change = (randi() * years_to_next_css_tolerance) + (years_to_next_css_tolerance / 2)
@@ -194,7 +199,7 @@ func _process(_delta: float) -> void:
             1: tmp = "FALL"
             2: tmp = "WINTER"
             3: tmp = "SPRING"
-        tmp_biome.text = "SELECTED BIOME: " + selected_biome.name + "\n\t\t\t\t" + "SEASON: " + tmp
+        tmp_biome.text = "SELECTED BIOME: " + selected_biome.name + "\n\t\t\t\tSEASON: " + tmp
 
     tmp = "SEASON TEMPERATURE: " + str(snapped(selected_biome.temperature, 0.01)) + "\n"
     tmp += "SEASON HUMIDITY: " + str(snapped(selected_biome.humidity, 0.01)) + "\n"

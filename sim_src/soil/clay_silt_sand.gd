@@ -30,7 +30,7 @@ func change_by(_amt:int):
 
     if negative: _amt *= -1
 
-    var smallest: int = -1 * int(_amt / 2)
+    var smallest: int = -1 * int(_amt / 2) # warning-ignore:integer_division
     var rest: int = -1 * (_amt - smallest)
 
     tmp_array[order[0]] += _amt

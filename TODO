@@ -44,7 +44,7 @@ add more complexity to weather system
         NATURAL DISASTERS
 
 add PLANTS:
-    organism abstract class
+    organism class
         growth means how big the thing currently is from 0-100
             will have a polynomial equation associated with it to determine nutrient requirements/usage at different ages
                 I.E. while growing fast, the nutrients stored in it will grow a lot 

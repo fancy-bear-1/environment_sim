@@ -15,8 +15,16 @@ run/main_scene="res://main_scene.tscn"
 config/features=PackedStringArray("4.5", "Forward Plus")
 config/icon="res://icon.svg"
 
+[autoload]
+
+ECS="*res://addons/gecs/ecs/ecs.gd"
+
 [display]
 
 window/size/viewport_width=1920
 window/size/viewport_height=1080
 window/size/initial_position_type=3
+
+[editor_plugins]
+
+enabled=PackedStringArray("res://addons/gecs/plugin.cfg")

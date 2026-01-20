@@ -8,6 +8,7 @@ static var elevation_const := -3.0
 static var buffer := 10
 static var elevation_noise_const := 1.0
 static var rain_const := 1.0
+static var nutrient_const := 0.3
 
 var chunk_coord: Vector2
 var temperature: float
@@ -49,7 +50,7 @@ func _draw_chunk():
     area.input_ray_pickable = true
 
     # set the shape size to use for collision box
-    shape.extents = Vector3(_world_scale, buffer + (_world_scale * elevation / 2), _world_scale)
+    shape.extents = Vector3(_world_scale, buffer + (_world_scale * elevation), _world_scale)
     collision.shape = shape
     area.add_child(collision)
 
@@ -57,10 +58,8 @@ func _draw_chunk():
     # divided by 2 because this will create a flat bottom for the world
     cube.mesh = BoxMesh.new()
     cube.position = Vector3(_world_scale * chunk_coord.x, buffer + (_world_scale * elevation / 2), _world_scale * chunk_coord.y)
-    area.position = Vector3(_world_scale * chunk_coord.x, buffer + (_world_scale * elevation / 2), _world_scale * chunk_coord.y)
-    area.scale = Vector3(_world_scale, _world_scale, _world_scale)
-    cube.scale = Vector3(_world_scale, _world_scale, _world_scale)
-    cube.mesh.size = Vector3(_world_scale, buffer + (_world_scale * elevation / 2), _world_scale)
+    collision.position = Vector3(_world_scale * chunk_coord.x,0, _world_scale * chunk_coord.y)
+    cube.mesh.size = Vector3(_world_scale, buffer + (_world_scale * elevation), _world_scale)
 
     # then create/get a surface material and set the color
     material = cube.mesh.surface_get_material(0)
@@ -115,7 +114,7 @@ func _do_tick():
     if raining:
         moisture += water_retention * rain_const
 
-        nutrient_level -= (nutrient_level * (randf() * (100 - nutrient_retention)) / 1000)
+        nutrient_level = nutrient_level - (nutrient_level * (randf() * ((100 - nutrient_retention) * nutrient_const) / 100))
         if nutrient_level <= 0: nutrient_level = 0
 
     else:
