@@ -7,15 +7,17 @@ func query():
 
 func _metabolism(entity: Entity):
     entity.get_component(C_Growth) as c_growth
+    entity.get_component(C_Health) as health
+
     if c_growth.food_storage > metabolic_rate:
         c_growth.food_storage -= metabolic_rate
         c_growth.energy_stores += c_growth.metabolic_rate * c_growth.energy_constant
+        if health.starving: health.starving = 
     else:
         var temp = food_storage - metabolic_rate
         c_growth.food_storage = 0.0
         c_growth.energy_stores += temp
         if c_growth.energy_stores <= 0:
-            entity.get_component(C_Health) as health
             health.starving = true
             health.health += c_growth.energy_stores
             c_growth.energy_stores = 0.0

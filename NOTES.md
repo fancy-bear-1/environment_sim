@@ -1,0 +1,1 @@
+starting with a growth constant of 1.0 for duckweed, which may not be accurate but we'll see

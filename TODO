@@ -1,5 +1,7 @@
 add saving
 
+refactor to better conform to GECS best practices
+
 add UI:
         on top left show 2d map
         on bottom left put a slider for the timespeed,
@@ -63,6 +65,22 @@ add PLANTS:
         photosynthesis:
             does the plant have sun
                 if yes, then take water and nutrients from the soil to generate food
+
+    how to store data:
+        JSON format obviously but that bloats exponentially if its a single file with all of them
+        don't know how to split up
+            growing medium
+                more practical but edge cases cause issues with where to store things (sloth moss)
+                
+                soil (anything that roots into the ground as its primary source of nutrients)
+                water (floating plants, can have roots even if they go into soil they go here anyway shut up shutupshutupshutupshutupshutup)
+                other plants(includes both epiphytes and parasites)
+            taxa (complicated but more accurate(?))
+                does accuracy in this sense even matter?
+            alternatively just put everything in a single file
+                this would eventually turn into a nightmare but not for a while
+                    would also allow me to easily edit relations
+
     genetic trait class
         TODO
 
