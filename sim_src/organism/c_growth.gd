@@ -11,15 +11,14 @@ extends Component
 @export var growth_rate: float = 0.0
 @export var growth_rate_constant: float = 0.0
 
-@export var food_source:Array[Entity] = []
 @export var food_storage: float = 0.0
 @export var energy_stores: float = 0.0
 @export var metabolic_rate: float = 0.0 # constant based on individual
-
+@export var energy_constant: float = 0.0
 @export var can_grow: bool = false
 @export var reproductive_threshhold: float = 0.0
 
-func _init(_growth, _growth_constant, _mass, _mass_constant, _max_mass, _growth_rate, _growth_rate_constant, _food_source, _can_grow, _reproductive_threshhold):
+func _init(_growth, _growth_constant, _mass, _mass_constant, _max_mass, _growth_rate, _growth_rate_constant, _food_source, _can_grow, _energy_constant):
     growth = _growth
     growth_constant = _growth_constant
     mass = _mass
@@ -29,4 +28,6 @@ func _init(_growth, _growth_constant, _mass, _mass_constant, _max_mass, _growth_
     growth_rate_constant = _growth_rate_constant
     can_grow = _can_grow
     food_source = _food_source
-    reproductive_threshhold = _reproductive_threshhold
+    food_storage = 0.0
+    energy_stores = 0.0
+    energy_constant = _energy_constant
