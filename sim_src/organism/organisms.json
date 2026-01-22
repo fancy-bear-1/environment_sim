@@ -12,6 +12,17 @@
                 "producer": true,
                 "intake_rate": 3.0,
                 "growing_medium": "water:floating"
-            }
+            },
+        "roots": {
+            "ratio": 0.1,
+            "width": 2.0,
+            "depth": 0.5,
+            "max_depth": 0.05,
+            "preferred_depth": 0.01,
+            "max_width": 0.06,
+            "preferred_width": 0.03,
+            "porosity_constant": 0.0
+        },
+        "comment": ""
     }
 }
