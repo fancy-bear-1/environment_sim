@@ -8,6 +8,7 @@ func _query():
 
 func _process(entity: Entity, _delta: float):
     entity.get_component(C_FoodSource) as food_source
+    entity.get_component(C_Growth) as growth
 
     var produce:bool = False
 
@@ -36,4 +37,7 @@ func _process(entity: Entity, _delta: float):
             deficit_ratio = deficit / food_source["intake_rate"]
             entity.current_chunk.nutrient_level = 0
 
-        food_source.
+        if deficit_ratio != 0.0:
+            growth.food_storage += delta * food_source["intake_rate"] * deficit_ratio
+        else:
+            growth.food_storage -= delta * food_source["intake_rate"]
