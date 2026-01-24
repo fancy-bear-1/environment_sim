@@ -1,5 +1,5 @@
 class_name ClaySandSilt
-extends Soil
+extends Node
 #const Soil = preload("res://soil.gd")
 #extends Soil
 

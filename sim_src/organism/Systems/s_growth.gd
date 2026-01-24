@@ -1,4 +1,4 @@
-class_name GrowthSystem
+class_name S_Growth
 extends System
 
 # only affects living organisms

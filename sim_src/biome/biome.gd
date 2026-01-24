@@ -7,6 +7,7 @@ static var tolerance := 1.0
 var chunks: Array[Chunk] = []
 
 var center: Vector2
+var sunlight: float
 var temperature: float
 var season_temperature: Array[float]
 var humidity: float
@@ -30,12 +31,15 @@ func _init(biome_name, center_coord, biome_dict) -> void:
     center = center_coord
     name = biome_name
     season_index = 0
+    sunlight = 0.0
 
-    season_temperature =[] 
+    season_temperature = []
+    season_humidity = []
     for current_season_temp in biome_dict["temperature"]:
         season_temperature.append(current_season_temp + ((randf() * tolerance) - (tolerance / 2)))
     for current_season_hum in biome_dict["humidity"]:
         season_humidity.append(current_season_hum + ((randf() * tolerance) - (tolerance / 2)))
+
     temperature = season_temperature[season_index] + ((randf() * tolerance) - (tolerance / 2))
     humidity = season_humidity[season_index] + ((randf() * tolerance) - (tolerance / 2))
     nutrient_level = biome_dict["nutrient_level"] + ((randf() * tolerance) - (tolerance / 2))
@@ -62,7 +66,10 @@ func _process(_delta: float) -> void:
 
     nutrient_level = var_avg_dict["nutrient_level"] / len(chunklist)
     moisture = var_avg_dict["moisture"] / len(chunklist)
-    raining = raining_counter > (len(chunklist) / 2) 
+    var rain_percentage = raining_counter / len(chunklist)
+    raining = rain_percentage > .5
+
+    sunlight = (1 - rain_percentage) * 100.0
     
     css.clay = int(var_avg_dict["clay"] / len(chunklist))
     css.sand = int(var_avg_dict["sand"] / len(chunklist))

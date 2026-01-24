@@ -11,6 +11,7 @@ static var rain_const := 1.0
 static var nutrient_const := 0.3
 
 var chunk_coord: Vector2
+var sunlight: float
 var temperature: float
 var humidity: float
 var nutrient_level: float
@@ -37,6 +38,7 @@ func _refresh_biome_vars():
     nutrient_level = _rand_by_tolerance(_biome.nutrient_level)
     moisture = _rand_by_tolerance(_biome.moisture)
     css = ClaySandSilt.new(_biome.css, true)
+    sunlight = _rand_by_tolerance(_biome.sunlight)
 
 func _draw_chunk():
     # reponsible for drawing the chunk graphically and connecting the signal to the parent biome 

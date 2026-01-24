@@ -6,8 +6,9 @@ const ORGANISM_TYPE_LIST = preload("res://sim_src/organisms.json").data
 @export var growth: C_Growth = null
 @export var health: C_Health = null
 @export var food_source: C_FoodSource = null
+@export var sunlight: float = 0.0
 
-@export var current_chunk = null
+@export var current_chunk:  = null
 
 func _init(name, parent):
     current_chunk = parent
@@ -16,3 +17,6 @@ func _init(name, parent):
         growth = C_Growth.new(temp_dict["growth"])
         health = C_Health.new()
         food_source = C_FoodSource.new(temp_dict["food_source"])
+
+func set_chunk(parent):
+    current_chunk = parent
