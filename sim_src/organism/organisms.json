@@ -17,8 +17,7 @@
             },
         "roots": {
             "ratio": 0.1,
-            "width": 0.5,
-            "depth": 0.2,
+            "width_depth_ratio": 0.95,
             "max_depth": 0.05,
             "preferred_depth": 0.01,
             "max_width": 0.06,

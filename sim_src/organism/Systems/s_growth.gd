@@ -22,10 +22,17 @@ func _metabolism(entity: Entity):
         health.starving = true
         health.health += c_growth.energy_stores
         c_growth.energy_stores = 0.0
+
+    if c_growth.energy_stores > 0:
+        c_growth.can_grow = true
+    else:
+        c_growth.can_grow = false
     
 
 func _process(entity: Entity, _delta: float):
     entity.get_component(C_Growth) as c_growth
+    entity.get_component(C_Roots) as c_roots
+    entity.get_component(C_Leaves) as c_leaves
 
     # handle metablism first
     _metabolism(entity)
@@ -36,7 +43,17 @@ func _process(entity: Entity, _delta: float):
         c_growth.mass_rate = c_growth.mass * c_growth.growth_rate_constant * \
         (1 - (c_growth.mass / c_growth.max_mass))
 
-        c_growth.mass += c_growth.mass_rate * _delta * c_growth.growth_constant
+        var growth_amount = c_growth.mass_rate * _delta * c_growth.growth_constant
+
+        c_growth.mass += growth_amount
+
+        for temp_component in [c_roots, c_leaves]
+            if temp_component != null:
+                var temp_growth_amount = temp_component.ratio * growth_amount
+                if temp_component.preferred_width > temp_component.width:
+                    temp_component.width += temp_growth_amount * temp_component.width_depth_ratio
+                if temp_component.preferred_depth > temp_component.depth:
+                    temp_component.depth += temp_growth_amount * (1 - temp_component.width_depth_ratio)
 
     else:
         max_mass -= (.01 * max_mass)
