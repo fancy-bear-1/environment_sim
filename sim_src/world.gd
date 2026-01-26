@@ -15,6 +15,8 @@ static var max_mountain_elevation := 100.0
 static var max_mountain_radius := 20
 static var max_mountain_peak_radius := 5
 
+static var steepness_gradient_radius := 2
+
 static var days_in_season := 90
 static var steps_per_day := 2
 static var day_to_day_variance := 20
@@ -34,6 +36,42 @@ var sun:DirectionalLight3D
 
 var world_seed: int
 @onready var world:World=$World
+
+func generate_steepness(elevation_map):
+    
+    # initialize gradient map
+    var res = []
+    for x in range(width):
+        var tmp = []
+        for y in range(height):
+            tmp.append(0.0)
+        res.append(tmp)
+
+    # for every chunk on the map
+    for x in range(width):
+        for y in range(height):
+            var derivatives_per_chunk = []
+            # find the derivative of elevation between each chunk in range and this one
+            # center at steepness_gradient_radius + 1, steepness_gradient_radius + 1
+            for local_x in range((steepness_gradient_radius * 2) + 1):
+                for local_y in range((steepness_gradient_radius * 2) + 1):
+                    var global_coord = Vector2(x + (local_x - steepness_gradient_radius - 1), y + (local_y - steepness_gradient_radius - 1))
+                    if global_coord.x >= 0 and global_coord.y >= 0:
+                        if global_coord.distance_to(Vector2(x, y)) != 0:
+                            var d_elevation = (elevation_map[global_coord.x, global_coord.y] - elevation_map[x, y]) / global_coord.distance_to(Vector2(x, y))
+                            derivatives_per_chunk.append(d_elevation)
+                        else:
+                            derivatives_per_chunk.append(0.0)
+
+            # take the average of all of those derivatives to get the derivative for the current chunk
+            var local_elevation_derivative = 0.0
+            for coord in derivatives_per_chunk:
+                local_elevation_derivative += coord
+            res[x][y] = local_elevation_derivative / len(derivatives_per_chunk)
+    
+    return res
+
+
 
 func generate_mountains():
     var elevation_map:Array[Array] = []
@@ -140,6 +178,8 @@ func _ready() -> void:
 
     print("generating mountains")
     var elevation_map = generate_mountains()
+
+    var steepness_map = generate_steepness(elevation_map)
     # print("generating bodies of water")
     print("job done")
 

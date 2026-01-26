@@ -19,6 +19,7 @@ var nutrient_retention: float
 var water_retention: float
 var moisture: float
 var css: ClaySandSilt
+var soil: Array[Soil]
 var raining: bool
 var elevation: float
 var _biome: Biome
