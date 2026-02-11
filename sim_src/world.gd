@@ -50,24 +50,15 @@ func generate_steepness(elevation_map):
     # for every chunk on the map
     for x in range(width):
         for y in range(height):
-            var derivatives_per_chunk = []
-            # find the derivative of elevation between each chunk in range and this one
-            # center at steepness_gradient_radius + 1, steepness_gradient_radius + 1
-            for local_x in range((steepness_gradient_radius * 2) + 1):
-                for local_y in range((steepness_gradient_radius * 2) + 1):
-                    var global_coord = Vector2(x + (local_x - steepness_gradient_radius - 1), y + (local_y - steepness_gradient_radius - 1))
-                    if global_coord.x >= 0 and global_coord.y >= 0:
-                        if global_coord.distance_to(Vector2(x, y)) != 0:
-                            var d_elevation = (elevation_map[global_coord.x, global_coord.y] - elevation_map[x, y]) / global_coord.distance_to(Vector2(x, y))
-                            derivatives_per_chunk.append(d_elevation)
-                        else:
-                            derivatives_per_chunk.append(0.0)
+            var xm := max(x - 1, 0)
+			var xp := min(x + 1, width - 1)
+			var ym := max(y - 1, 0)
+			var yp := min(y + 1, height - 1)
 
-            # take the average of all of those derivatives to get the derivative for the current chunk
-            var local_elevation_derivative = 0.0
-            for coord in derivatives_per_chunk:
-                local_elevation_derivative += coord
-            res[x][y] = local_elevation_derivative / len(derivatives_per_chunk)
+			var dx := (data[xp][y] - data[xm][y]) * 0.5
+			var dy := (data[x][yp] - data[x][ym]) * 0.5
+
+			res[x][y] = Vector2(dx, dy)
     
     return res
 
@@ -124,6 +115,12 @@ func generate_mountains():
 
     return elevation_map
 
+func generate_water(elevation_map, steepness_map):
+    # first do a base layer of water at elevation 1 or less
+
+    # then
+
+
 func _phys_erosion():
     pass
 
@@ -178,6 +175,8 @@ func _ready() -> void:
 
     print("generating mountains")
     var elevation_map = generate_mountains()
+
+    var elevation_map = generate_water()
 
     var steepness_map = generate_steepness(elevation_map)
     # print("generating bodies of water")

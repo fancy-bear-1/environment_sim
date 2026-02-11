@@ -9,6 +9,17 @@ extends Component
 
 @export var growth_rate_constant: float = 0.0
 
+@export var water_stores: float = 0.0
+@export var water_usage_rate: float = 0.0 # constant based on individual
+@export var dehydration_threshold: float = 0.0 #
+
+@export var salt_level: float = 0.0
+@export var desired_salt_level: float = 0.0
+@export var salt_tolerance_ratio: float = 0.0
+@export var salt_usage_rate: float = 0.0
+
+@export var stress_storage_constant: float = 0.0
+
 @export var food_storage: float = 0.0
 @export var energy_stores: float = 0.0
 @export var metabolic_rate: float = 0.0 # constant based on individual
