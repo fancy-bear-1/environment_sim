@@ -5,7 +5,7 @@ extends Control
 
 static var tolerance := 5.0
 static var elevation_const := -3.0
-static var buffer := 10
+static var buffer := 110
 static var elevation_noise_const := 1.0
 static var rain_const := 1.0
 static var nutrient_const := 0.3
@@ -54,14 +54,15 @@ func _draw_chunk():
 
     # set the shape size to use for collision box
     shape.extents = Vector3(_world_scale, buffer + (_world_scale * elevation), _world_scale)
+    shape.position = shape.position - Vector3(0, buffer, 0)
     collision.shape = shape
     area.add_child(collision)
 
     # then create box graphically using the world scale and elevation
     # divided by 2 because this will create a flat bottom for the world
     cube.mesh = BoxMesh.new()
-    cube.position = Vector3(_world_scale * chunk_coord.x, buffer + (_world_scale * elevation / 2), _world_scale * chunk_coord.y)
-    collision.position = Vector3(_world_scale * chunk_coord.x,0, _world_scale * chunk_coord.y)
+    cube.position = Vector3(_world_scale * chunk_coord.x, (_world_scale * elevation / 2), _world_scale * chunk_coord.y)
+    collision.position = Vector3(_world_scale * chunk_coord.x,-buffer, _world_scale * chunk_coord.y)
     cube.mesh.size = Vector3(_world_scale, buffer + (_world_scale * elevation), _world_scale)
 
     # then create/get a surface material and set the color

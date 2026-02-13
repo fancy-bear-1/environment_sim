@@ -65,6 +65,7 @@ func generate_steepness(elevation_map):
 
     return res
 
+
 func elevation_second_derivative(steepness_map):
     # initialize gradient map
     var res = []
@@ -78,15 +79,15 @@ func elevation_second_derivative(steepness_map):
     for x in range(width):
         for y in range(height):
             var xm := max(x - 1, 0)
-			var xp := min(x + 1, width - 1)
-			var ym := max(y - 1, 0)
-			var yp := min(y + 1, height - 1)
+            var xp := min(x + 1, width - 1)
+            var ym := max(y - 1, 0)
+            var yp := min(y + 1, height - 1)
 
-			var dx := (steepness_map[xp][y].x - steepness_map[xm][y].x) * 0.5
-			var dy := (steepness_map[x][yp].y - steepness_map[x][ym].y) * 0.5
+            var dx := (steepness_map[xp][y].x - steepness_map[xm][y].x) * 0.5
+            var dy := (steepness_map[x][yp].y - steepness_map[x][ym].y) * 0.5
             dy += (steepness_map[xp][y].y - steepness_map[xm][y].y) * 0.5
-			dx += (steepness_map[x][yp].x - steepness_map[x][ym].x) * 0.5
-			res[x][y] = Vector2(dx, dy)
+            dx += (steepness_map[x][yp].x - steepness_map[x][ym].x) * 0.5
+            res[x][y] = Vector2(dx, dy)
     
     return res
 
@@ -103,7 +104,7 @@ func generate_mountains():
 
     for i in range((randi() % (max_mountains - min_mountains)) + min_mountains):
         print("mountain " + str(i + 1))
-        var elevation: float = randf() * max_mountain_elevation
+        var elevation: float = (randf() * 2 * max_mountain_elevation) - max_mountain_elevation
         print("elevation " + str(elevation))
         var peak_radius: int = randi() % max_mountain_peak_radius
         print("peak_radius " + str(peak_radius))
@@ -154,20 +155,27 @@ func generate_water(elevation_map, steepness_map):
             tmp.append(false)
         body_of_water_map.append(tmp)
 
-    # first do a base layer of water at elevation 1 or less
-    for x in range(width):
-        for y in range(height):
-            if elevation_map[x][y] <= 1.0:
-                body_of_water_map[x][y] = true
+    # # first do a base layer of water at elevation 1 or less
+    # for x in range(width):
+    #     for y in range(height):
+    #         if elevation_map[x][y] <= 0.0:
+    #             body_of_water_map[x][y] = true
 
     for x in range(width):
         for y in range(height):
             # if the current point is a local minimum, set it to true on the map and fill out the rest of the body
-            if steepness_map[x][y].magnitude() <= body_of_water_threshold and second_derivative[x][y] > 0:
+            if steepness_map[x][y].magnitude() <= body_of_water_threshold and \
+            second_derivative[x][y].x > 0 and second_derivative[x][y].y > 0:
                 var tmp = fill_water_body(Vector2(x, y), x, y, elevation_map, steepness_map, second_derivative)
                 # to fill it out, find the borders of the body by finding the other points where steepness is below the threshold but the second derivative is pointing away from the center
                 for coord in tmp:
                     body_of_water_map[coord.x][coord.y] = true
+
+    for x in range(width):
+        for y in range(height):
+            if body_of_water_map[x][y]:
+                # TODO: render water polygons
+                pass
 
 
 func fill_water_body(center, x, y, elevation_map, steepness_map, second_derivative_map):
@@ -198,7 +206,7 @@ func fill_water_body(center, x, y, elevation_map, steepness_map, second_derivati
             res.append(Vector2(x, y))
 
     for dx in [1, 0, -1]:
-        for dy in [1, 0, -1]
+        for dy in [1, 0, -1]:
             # if the change is not 0, 0
             if dx != 0 or dy != 0:
                 # recursive call on next chunk
@@ -223,7 +231,19 @@ func _do_erosion():
 
 
 func _save():
-    pass
+    var save_game = File.new()
+    save_game.open("user://" + world_seed + ".save", File.WRITE)
+    
+    save_game.store_line(world_seed + ", " + "YEAR: " + str(year) + ", DAY: " + str(day))
+
+    save_game.store_line("BIOMES")
+    for biome in generated_biomelist:
+        save_game.store_line(to_json(biome))
+
+    save_game.store_line("CHUNKS")
+
+    for chunk in chunklist:
+        save_game.store_line(to_json(chunk))
 
 
 # Called when the node enters the scene tree for the first time.
@@ -264,10 +284,11 @@ func _ready() -> void:
     print("generating mountains")
     var elevation_map = generate_mountains()
 
-    # var elevation_map = generate_water()
 
     var steepness_map = generate_steepness(elevation_map)
-    # print("generating bodies of water")
+    print("generating bodies of water")
+
+    var elevation_map = generate_water()
     print("job done")
 
     var birdseye_cam = get_node(NodePath('../Camera3D/CanvasLayer/2d_map/birds-eye cam'))
