@@ -23,7 +23,7 @@ static var day_to_day_variance := 20
 static var world_scale := 1.0
 static var weathering_radius := 1
 
-static var body_of_water_threshold = 1.0
+static var body_of_water_threshold = 0.25
 
 
 var chunklist: Array[Array] = []
@@ -189,13 +189,14 @@ func fill_water_body(center, x, y, elevation_map, steepness_map, second_derivati
     if center == Vector2(x, y):
         res.append(center)
 
-    # if the current chunk is on the border
+    # if the current chunk is on a possible local maximum
     elif steepness_map[x][y].magnitude() <= body_of_water_threshold:
         var tmp = second_derivative_map[x][y]
-        # if the sign of the 2nd derivative is the same as the direction from the center, this tile IS part of the body of water
+        # if the sign of the 2nd derivative is the same as the direction from the center, this tile IS a local maximum
         if (tmp.x == 0 or tmp.x / abs(tmp.x) == direction_from_center.x / abs(direction_from_center.x)) and \
             (tmp.y == 0 or tmp.y / abs(tmp.y) == direction_from_center.y / abs(direction_from_center.y)):
             res.append(Vector2(x, y))
+            # if this tile is a local maximum, the surface of the water is at the elevation of this tile                                                                                          
 
     # otherwise determine whether the current chunk is 
     else:
