@@ -9,6 +9,7 @@ static var buffer := 110
 static var elevation_noise_const := 1.0
 static var rain_const := 1.0
 static var nutrient_const := 0.3
+static var salinity_const := 0.3
 
 var chunk_coord: Vector2
 var sunlight: float
@@ -21,6 +22,8 @@ var moisture: float
 var css: ClaySandSilt
 var soil: Array[Soil]
 var raining: bool
+var water_depth: float
+var salinity: float # in grams/kilogram of water
 var elevation: float
 var _biome: Biome
 var _world_scale: float
@@ -113,6 +116,12 @@ func next_season():
     temperature = _rand_by_tolerance(_biome.temperature) - ((elevation - 1) * elevation_const)
     humidity = _rand_by_tolerance(_biome.humidity) + ((elevation - 1) * elevation_const)
 
+func _update_water_level(change:float):
+    if water_depth + change >= 0:
+        water_depth += change
+    else:
+        water_depth = 0.0
+
 func _do_tick():
     # water
     if raining:
@@ -127,6 +136,7 @@ func _do_tick():
             moisture -= moisture * (randf() * water_retention) / 100
     
     if moisture >= 100.0:
+        _update_water_level(moisture - 100.0)
         moisture = 100.0
 
 # Called every frame. 'delta' is the elapsed time since the previous frame.
